@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Métallerie Du Sud | Métallier artisan &ndash; Portails, Garde-corps, Escaliers sur mesure</title>
+  <meta name="description" content="La Métallerie Du Sud, artisan métallier dans le Sud de la France : portails, garde-corps, escaliers, verrières et structures métalliques sur mesure. Devis gratuit." />
+
+  <!-- ============================================================
+       POLICE (optionnel) : tu peux remplacer par une autre police
+       Google Fonts, ou la supprimer si tu préfères une police système.
+  ============================================================= -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Favicon simple (à remplacer par ton propre favicon.ico si tu en as un) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔩</text></svg>" />
+</head>
+<body>
+
+  <!-- ============================================================
+       HEADER / NAVIGATION
+  ============================================================= -->
+  <header class="site-header" id="site-header">
+    <div class="container header-inner">
+      <a href="#accueil" class="logo">
+        <img src="data:image/png;base64,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" alt="La Métallerie Du Sud - Ferronnerie Vauchel" class="logo-img" />
+      </a>
+
+      <nav class="main-nav" id="main-nav">
+        <ul>
+          <li><a href="#accueil" class="nav-link">Accueil</a></li>
+          <li><a href="#services" class="nav-link">Services</a></li>
+          <li><a href="#realisations" class="nav-link">Réalisations</a></li>
+          <li><a href="grands-chantiers.html" class="nav-link">Grands Chantiers</a></li>
+          <li><a href="#a-propos" class="nav-link">À propos</a></li>
+          <li><a href="#avis" class="nav-link">Avis</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <a href="#contact" class="btn btn-primary btn-header">Devis gratuit</a>
+
+      <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       HERO
+  ============================================================= -->
+  <section class="hero" id="accueil">
+    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="container hero-inner">
+      <p class="eyebrow">Artisan métallier &middot; Sud de la France</p>
+      <h1>Le métal, façonné avec précision, <span>pour durer.</span></h1>
+      <p class="hero-text">
+        Portails, garde-corps, escaliers, verrières et structures métalliques sur mesure.
+        Depuis <strong>[NOMBRE]</strong> ans, La Métallerie Du Sud conçoit et fabrique des ouvrages
+        en métal robustes et élégants pour les particuliers et les professionnels.
+      </p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-accent">Demander un devis gratuit</a>
+        <a href="#realisations" class="btn btn-outline">Voir nos réalisations</a>
+      </div>
+
+      <ul class="hero-stats">
+        <li><strong>[15]+</strong><span>ans d'expérience</span></li>
+        <li><strong>[300]+</strong><span>chantiers réalisés</span></li>
+        <li><strong>100%</strong><span>fabrication sur mesure</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SERVICES
+  ============================================================= -->
+  <section class="section" id="services">
+    <div class="container">
+      <p class="section-eyebrow">Nos savoir-faire</p>
+      <h2 class="section-title">Des ouvrages métalliques sur mesure, pour chaque projet</h2>
+      <p class="section-lead">
+        De la conception à la pose, chaque pièce est étudiée, fabriquée et installée dans notre atelier
+        du Sud de la France. Remplace ces textes par la description réelle de tes prestations.
+      </p>
+
+      <div class="grid grid-3 reveal-group">
+        <article class="card reveal">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16M4 6h16M4 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <h3>Portails &amp; clôtures</h3>
+          <p>Portails battants ou coulissants, motorisés ou manuels, clôtures et portillons assortis, en acier ou aluminium.</p>
+        </article>
+
+        <article class="card reveal">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 20h18M6 20V9l6-5 6 5v11M9 20v-6h6v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Garde-corps &amp; rambardes</h3>
+          <p>Garde-corps intérieurs et extérieurs, balustrades pour balcons et terrasses, conformes aux normes de sécurité.</p>
+        </article>
+
+        <article class="card reveal">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 20h4v-4h4v-4h4v-4h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Escaliers métalliques</h3>
+          <p>Escaliers droits, quart tournant ou hélicoïdaux, structure acier avec finitions bois, verre ou métal.</p>
+        </article>
+
+        <article class="card reveal">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="1" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M9 10v10" stroke="currentColor" stroke-width="2"/></svg>
+          </div>
+          <h3>Verrières d'atelier</h3>
+          <p>Verrières intérieures style atelier, cloisons vitrées et baies métalliques pour sublimer vos espaces.</p>
+        </article>
+
+        <article class="card reveal">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2 2 7l10 5 10-5-10-5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Structures &amp; charpentes</h3>
+          <p>Charpentes métalliques, mezzanines, auvents et structures pour bâtiments professionnels et particuliers.</p>
+        </article>
+
+        <article class="card reveal">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M14.7 6.3a1 1 0 0 0-1.4 0L4 15.6V20h4.4l9.3-9.3a1 1 0 0 0 0-1.4l-3-3Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>Réparation &amp; dépannage</h3>
+          <p>Intervention rapide pour réparer, renforcer ou remettre en état vos ouvrages métalliques existants.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       À PROPOS
+  ============================================================= -->
+  <section class="section section-alt" id="a-propos">
+    <div class="container about-grid">
+      <div class="about-text reveal">
+        <p class="section-eyebrow">À propos</p>
+        <h2 class="section-title">Un savoir-faire artisanal, une fabrication 100% sur mesure</h2>
+        <p>
+          [Remplace ce paragraphe par l'histoire de ton entreprise : date de création, parcours,
+          valeurs. Exemple : Fondée en [ANNÉE], La Métallerie Du Sud est une entreprise familiale
+          basée à [VILLE], spécialisée dans la conception et la fabrication d'ouvrages métalliques
+          sur mesure pour les particuliers, artisans et professionnels du Sud de la France.]
+        </p>
+        <p>
+          Chaque projet est pensé avec le client, dessiné, fabriqué dans notre atelier puis posé
+          avec soin. Nous travaillons l'acier, l'aluminium et l'inox pour garantir des ouvrages
+          résistants, esthétiques et durables.
+        </p>
+
+        <ul class="check-list">
+          <li>Devis gratuit et sans engagement</li>
+          <li>Fabrication artisanale dans notre atelier</li>
+          <li>Intervention dans tout le [DÉPARTEMENT / RÉGION]</li>
+          <li>Garantie sur l'ensemble de nos réalisations</li>
+        </ul>
+
+        <a href="#contact" class="btn btn-primary">Nous contacter</a>
+      </div>
+
+      <div class="about-media reveal">
+        <div class="img-placeholder">
+          <span>Photo de l'atelier ou de l'équipe<br /><small>images/atelier.jpg</small></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       RÉALISATIONS / PORTFOLIO
+  ============================================================= -->
+  <section class="section" id="realisations">
+    <div class="container">
+      <p class="section-eyebrow">Nos réalisations</p>
+      <h2 class="section-title">Quelques-uns de nos projets récents</h2>
+      <p class="section-lead">
+        Remplace chaque vignette ci-dessous par une photo de tes réalisations
+        (dossier <code>images/</code>) pour présenter tes meilleurs chantiers.
+      </p>
+
+      <div class="grid grid-3 reveal-group gallery">
+        <figure class="gallery-item reveal">
+          <div class="img-placeholder"><span>Portail sur mesure<br /><small>images/realisation-1.jpg</small></span></div>
+          <figcaption><strong>Portail coulissant</strong><span>[Ville / Client]</span></figcaption>
+        </figure>
+        <figure class="gallery-item reveal">
+          <div class="img-placeholder"><span>Garde-corps design<br /><small>images/realisation-2.jpg</small></span></div>
+          <figcaption><strong>Garde-corps terrasse</strong><span>[Ville / Client]</span></figcaption>
+        </figure>
+        <figure class="gallery-item reveal">
+          <div class="img-placeholder"><span>Escalier hélicoïdal<br /><small>images/realisation-3.jpg</small></span></div>
+          <figcaption><strong>Escalier métallique</strong><span>[Ville / Client]</span></figcaption>
+        </figure>
+        <figure class="gallery-item reveal">
+          <div class="img-placeholder"><span>Verrière atelier<br /><small>images/realisation-4.jpg</small></span></div>
+          <figcaption><strong>Verrière intérieure</strong><span>[Ville / Client]</span></figcaption>
+        </figure>
+        <figure class="gallery-item reveal">
+          <div class="img-placeholder"><span>Structure métallique<br /><small>images/realisation-5.jpg</small></span></div>
+          <figcaption><strong>Mezzanine acier</strong><span>[Ville / Client]</span></figcaption>
+        </figure>
+        <figure class="gallery-item reveal">
+          <div class="img-placeholder"><span>Clôture &amp; portillon<br /><small>images/realisation-6.jpg</small></span></div>
+          <figcaption><strong>Clôture sur mesure</strong><span>[Ville / Client]</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       AVIS CLIENTS
+  ============================================================= -->
+  <section class="section section-alt" id="avis">
+    <div class="container">
+      <p class="section-eyebrow">Avis clients</p>
+      <h2 class="section-title">Ce que disent nos clients</h2>
+
+      <div class="testimonial-slider">
+        <div class="testimonial-track" id="testimonial-track">
+          <blockquote class="testimonial">
+            <p>« Travail soigné, portail livré dans les délais et très bon accompagnement du devis à la pose. Je recommande vivement. »</p>
+            <footer>— [Prénom Nom], [Ville]</footer>
+          </blockquote>
+          <blockquote class="testimonial">
+            <p>« Un vrai savoir-faire artisanal. Notre escalier est exactement ce qu'on imaginait, la finition est impeccable. »</p>
+            <footer>— [Prénom Nom], [Ville]</footer>
+          </blockquote>
+          <blockquote class="testimonial">
+            <p>« Équipe réactive et professionnelle, tarifs honnêtes. On fera de nouveau appel à eux pour nos prochains projets. »</p>
+            <footer>— [Prénom Nom], [Ville]</footer>
+          </blockquote>
+        </div>
+        <div class="testimonial-dots" id="testimonial-dots"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT
+  ============================================================= -->
+  <section class="section" id="contact">
+    <div class="container contact-grid">
+      <div class="contact-info reveal">
+        <p class="section-eyebrow">Contact</p>
+        <h2 class="section-title">Un projet en tête ? Parlons-en.</h2>
+        <p class="section-lead">
+          Contactez-nous pour un devis gratuit et sans engagement. Nous répondons
+          généralement sous 24 à 48h.
+        </p>
+
+        <ul class="contact-list">
+          <li>
+            <strong>Adresse</strong>
+            <span>1793 Chemin de la Cabane Vieille, 13550 Noves</span>
+          </li>
+          <li>
+            <strong>Téléphone</strong>
+            <span><a href="tel:+33781806344">07 81 80 63 44</a> &nbsp;/&nbsp; <a href="tel:+33687892245">06 87 89 22 45</a></span>
+          </li>
+          <li>
+            <strong>Email</strong>
+            <span><a href="mailto:f.vauchel@hotmail.com">f.vauchel@hotmail.com</a></span>
+          </li>
+          <li>
+            <strong>Horaires</strong>
+            <span>Lundi &ndash; Vendredi : 8h &ndash; 16h30</span>
+          </li>
+        </ul>
+      </div>
+
+      <form class="contact-form reveal" id="contact-form" action="https://formspree.io/f/meaqkdpr" method="POST">
+        <!--
+          Formulaire branché sur Formspree (service gratuit, sans backend).
+          Le script.js envoie le formulaire en arrière-plan (sans recharger la page)
+          et affiche un message de confirmation. Les messages arrivent sur l'email
+          associé au compte Formspree.
+        -->
+        <div class="form-row">
+          <label for="name">Nom complet</label>
+          <input type="text" id="name" name="name" required />
+        </div>
+        <div class="form-row">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+        <div class="form-row">
+          <label for="phone">Téléphone</label>
+          <input type="tel" id="phone" name="phone" />
+        </div>
+        <div class="form-row">
+          <label for="message">Votre projet</label>
+          <textarea id="message" name="message" rows="5" required placeholder="Décrivez votre projet : type d'ouvrage, dimensions approximatives, délai souhaité..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-accent btn-block">Envoyer ma demande</button>
+        <p class="form-note" id="form-note"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================= -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <p class="footer-brand-name">La Métallerie<br>Du Sud</p>
+        <p class="footer-brand-sub">Ferronnerie Vauchel</p>
+        <p>Métallier artisan &middot; Sud de la France</p>
+      </div>
+
+      <nav class="footer-nav">
+        <a href="#services">Services</a>
+        <a href="#realisations">Réalisations</a>
+        <a href="grands-chantiers.html">Grands Chantiers</a>
+        <a href="#a-propos">À propos</a>
+        <a href="#contact">Contact</a>
+        <a href="#">Mentions légales</a>
+      </nav>
+
+      <div class="footer-social">
+        <a href="#" aria-label="Facebook">FB</a>
+        <a href="#" aria-label="Instagram">IG</a>
+        <a href="#" aria-label="LinkedIn">IN</a>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>&copy; <span id="year"></span> La Métallerie Du Sud &mdash; Tous droits réservés.</p>
+    </div>
+  </footer>
+
+  <a href="#accueil" class="back-to-top" id="back-to-top" aria-label="Retour en haut">↑</a>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
