@@ -107,6 +107,39 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------------------------------------
+     4bis) FILTRES DE LA GALERIE "RÉALISATIONS"
+  --------------------------------------------------------- */
+  const filterBtns = document.querySelectorAll(".filter-btn");
+  const galleryItems = document.querySelectorAll("#gallery-grid .gallery-item");
+
+  function applyGalleryFilter(filter, btn) {
+    filterBtns.forEach((b) => b.classList.remove("active"));
+    if (btn) btn.classList.add("active");
+    galleryItems.forEach((item) => {
+      const match = filter === "all" || item.dataset.category === filter;
+      item.classList.toggle("is-hidden", !match);
+    });
+  }
+
+  if (filterBtns.length && galleryItems.length) {
+    filterBtns.forEach((btn) => {
+      btn.addEventListener("click", () => applyGalleryFilter(btn.dataset.filter, btn));
+    });
+
+    // Permet d'arriver directement filtré depuis le menu (ex: particulier.html#f-portail)
+    if (window.location.hash.startsWith("#f-")) {
+      const wanted = window.location.hash.replace("#f-", "");
+      const targetBtn = document.querySelector(`.filter-btn[data-filter="${wanted}"]`);
+      if (targetBtn) {
+        applyGalleryFilter(wanted, targetBtn);
+        setTimeout(() => {
+          document.getElementById("gallery-grid")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 200);
+      }
+    }
+  }
+
+  /* ---------------------------------------------------------
      5) ANNÉE AUTOMATIQUE DANS LE FOOTER
   --------------------------------------------------------- */
   const yearEl = document.getElementById("year");
