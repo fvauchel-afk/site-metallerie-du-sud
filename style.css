@@ -171,12 +171,12 @@ h1, h2, h3, h4 {
 }
 .site-header.scrolled .logo-img { height: 40px; }
 
-.main-nav ul { display: flex; gap: 32px; }
+.main-nav ul { display: flex; align-items: center; gap: 22px; }
 
 .nav-link {
   color: #fff;
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   position: relative;
   transition: color var(--transition);
 }
@@ -191,7 +191,57 @@ h1, h2, h3, h4 {
 }
 .nav-link:hover::after { width: 100%; }
 
-.btn-header { padding: 10px 22px; }
+.btn-header { padding: 10px 22px; white-space: nowrap; }
+
+/* ---- Sous-menu déroulant (ex: Particulier) ---- */
+.has-dropdown { position: relative; }
+.has-dropdown > .nav-link { display: inline-flex; align-items: center; gap: 4px; }
+.has-dropdown > .nav-link::before {
+  content: "";
+  width: 6px; height: 6px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translateY(-2px);
+  margin-left: 2px;
+}
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  min-width: 460px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px 20px;
+  background: var(--color-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(8px);
+  transition: opacity var(--transition), transform var(--transition), visibility var(--transition);
+  z-index: 200;
+}
+.has-dropdown:hover .dropdown-menu,
+.has-dropdown:focus-within .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+.dropdown-menu a {
+  color: var(--color-text);
+  font-size: 0.86rem;
+  font-weight: 500;
+  padding: 7px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: background var(--transition), color var(--transition);
+}
+.dropdown-menu a:hover { background: var(--color-bg-alt); color: var(--color-primary); }
+
+@media (max-width: 1140px) {
+  .btn-header { display: none; }
+}
 
 .burger {
   display: none;
@@ -375,6 +425,80 @@ h1, h2, h3, h4 {
 
 /* Une fois ta photo ajoutée dans /images, remplace le <div class="img-placeholder">
    correspondant par : <img src="images/ton-fichier.jpg" alt="..." /> */
+
+/* ---------------------------------------------------------------
+   UNIVERS (Particulier / Tertiaire / Collectivité)
+--------------------------------------------------------------- */
+.univers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+.univers-card {
+  position: relative;
+  display: block;
+  border-radius: var(--radius);
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  isolation: isolate;
+  box-shadow: var(--shadow);
+  transition: transform var(--transition);
+}
+.univers-card:hover { transform: translateY(-6px); }
+.univers-card img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  transition: transform 0.5s ease;
+}
+.univers-card:hover img { transform: scale(1.06); }
+.univers-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(10,10,10,0.05) 40%, rgba(10,10,10,0.88) 100%);
+  z-index: -1;
+}
+.univers-card-body {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 28px 26px;
+  color: #fff;
+}
+.univers-card-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  margin-bottom: 12px;
+}
+.univers-card-body h3 { color: #fff; font-size: 1.4rem; margin-bottom: 8px; }
+.univers-card-body p { color: rgba(255,255,255,0.82); font-size: 0.92rem; margin-bottom: 14px; }
+.univers-card-link {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.univers-card-link::after { content: "→"; transition: transform var(--transition); }
+.univers-card:hover .univers-card-link::after { transform: translateX(4px); }
+
+.univers-card--particulier .univers-card-tag { background: var(--color-primary); }
+.univers-card--tertiaire .univers-card-tag { background: #7a4a20; }
+.univers-card--collectivite .univers-card-tag { background: #2d5170; }
+
+@media (max-width: 900px) {
+  .univers-grid { grid-template-columns: 1fr; }
+  .univers-card { aspect-ratio: 16 / 10; }
+}
 
 /* ---------------------------------------------------------------
    GALERIE / RÉALISATIONS
@@ -627,6 +751,42 @@ h1, h2, h3, h4 {
 .back-to-top:hover { background: var(--color-accent); }
 
 /* ---------------------------------------------------------------
+   AMBIANCE SONORE (bouton dans le hero, ex: particulier.html)
+--------------------------------------------------------------- */
+.sound-toggle {
+  position: absolute;
+  right: 28px;
+  bottom: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px 10px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 5;
+  transition: background var(--transition), transform var(--transition);
+}
+.sound-toggle:hover { background: rgba(255, 255, 255, 0.26); transform: translateY(-2px); }
+.sound-toggle .sound-icon { width: 18px; height: 18px; flex-shrink: 0; }
+.sound-toggle .sound-icon .wave { opacity: 0; transition: opacity var(--transition); }
+.sound-toggle.is-playing .sound-icon .wave { opacity: 1; }
+.sound-toggle.is-playing .sound-icon .muted-line { opacity: 0; }
+.sound-toggle .sound-icon .muted-line { transition: opacity var(--transition); }
+.sound-toggle .sound-label-on { display: none; }
+.sound-toggle.is-playing .sound-label-off { display: none; }
+.sound-toggle.is-playing .sound-label-on { display: inline; }
+
+@media (max-width: 640px) {
+  .sound-toggle { right: 16px; bottom: 16px; padding: 9px 14px 9px 10px; font-size: 0.76rem; }
+}
+
+/* ---------------------------------------------------------------
    ANIMATIONS (apparition au scroll)
 --------------------------------------------------------------- */
 .reveal {
@@ -747,14 +907,32 @@ h1, h2, h3, h4 {
     top: 0; right: -100%;
     width: min(320px, 80%);
     height: 100vh;
+    overflow-y: auto;
     background: #fff;
     box-shadow: -10px 0 30px rgba(0,0,0,0.15);
     padding: 100px 32px 32px;
     transition: right var(--transition);
   }
   .main-nav.open { right: 0; }
-  .main-nav ul { flex-direction: column; gap: 24px; }
+  .main-nav ul { flex-direction: column; gap: 20px; align-items: flex-start; }
   .nav-link { color: var(--color-text) !important; }
+
+  .has-dropdown > .nav-link::before { border-color: var(--color-text-light); }
+  .dropdown-menu {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    box-shadow: none;
+    background: var(--color-bg-alt);
+    grid-template-columns: 1fr;
+    min-width: 0;
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px 14px;
+    gap: 2px;
+  }
+  .dropdown-menu a { font-size: 0.84rem; padding: 6px 4px; }
 
   .btn-header { display: none; }
   .burger { display: flex; }
