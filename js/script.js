@@ -140,6 +140,53 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------------------------------------
+     4ter) AMBIANCE SONORE (chants d'oiseaux, ex: hero Particulier)
+     ----------------------------------------------------------
+     Désactivée par défaut (les navigateurs bloquent de toute façon
+     le son automatique) : la personne clique pour l'activer, avec
+     un léger fondu à l'entrée et à la sortie.
+  --------------------------------------------------------- */
+  const soundToggle = document.getElementById("sound-toggle");
+  const ambiance = document.getElementById("ambiance-audio");
+
+  if (soundToggle && ambiance) {
+    let fadeTimer = null;
+    const TARGET_VOLUME = 0.55;
+
+    function fadeTo(target, duration) {
+      clearInterval(fadeTimer);
+      const steps = 20;
+      const stepTime = duration / steps;
+      const startVol = ambiance.volume;
+      const diff = target - startVol;
+      let i = 0;
+      fadeTimer = setInterval(() => {
+        i++;
+        ambiance.volume = Math.min(1, Math.max(0, startVol + (diff * i) / steps));
+        if (i >= steps) {
+          clearInterval(fadeTimer);
+          if (target === 0) ambiance.pause();
+        }
+      }, stepTime);
+    }
+
+    soundToggle.addEventListener("click", () => {
+      const isPlaying = soundToggle.classList.contains("is-playing");
+      if (isPlaying) {
+        fadeTo(0, 600);
+        soundToggle.classList.remove("is-playing");
+        soundToggle.setAttribute("aria-pressed", "false");
+      } else {
+        ambiance.volume = 0;
+        ambiance.play().catch(() => {});
+        fadeTo(TARGET_VOLUME, 900);
+        soundToggle.classList.add("is-playing");
+        soundToggle.setAttribute("aria-pressed", "true");
+      }
+    });
+  }
+
+  /* ---------------------------------------------------------
      5) ANNÉE AUTOMATIQUE DANS LE FOOTER
   --------------------------------------------------------- */
   const yearEl = document.getElementById("year");
