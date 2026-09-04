@@ -97,6 +97,9 @@
     @media (max-width: 640px) {
       #realisations { padding-top: 12px; }
     }
+
+    #realisations { display: none; }
+    #realisations.is-visible { display: block; }
   </style>
 </head>
 <body>
@@ -156,7 +159,7 @@
       </p>
       <div class="hero-actions">
         <a href="index.html#contact" class="btn btn-accent">Demander un devis gratuit</a>
-        <a href="#realisations" class="btn btn-outline">Voir nos réalisations</a>
+        <a href="#realisations" id="voir-realisations" class="btn btn-outline">Voir nos réalisations</a>
       </div>
     </div>
 
@@ -259,22 +262,47 @@
         });
       })();
 
-      // Onglets rapides (Pergola / Portail / Mobilier / Escalier / Verrière) en bas de la photo :
-      // on réutilise le système de filtres déjà présent plus bas sur la page (aucun autre fichier
-      // à modifier), puis on descend en douceur jusqu'à la galerie.
-      (function () {
-        var quicklinks = document.querySelectorAll('.hero-quicklink');
-        quicklinks.forEach(function (link) {
-          link.addEventListener('click', function (e) {
-            e.preventDefault();
-            var key = link.getAttribute('data-filter');
-            var targetBtn = document.querySelector('.filter-btn[data-filter="' + key + '"]');
+      // La galerie "Nos réalisations" (titre + gros bandeau de filtres + grille) est masquée
+      // par défaut : elle n'apparaît que lorsqu'on clique sur un onglet rapide en bas de la
+      // photo (ou sur "Voir nos réalisations"), déjà filtrée sur la bonne catégorie.
+      document.addEventListener('DOMContentLoaded', function () {
+        // à ce stade la page est entièrement analysée : la section #realisations
+        // (plus bas dans le HTML) existe bien dans le DOM.
+        function revealGallery(filterKey) {
+          var section = document.getElementById('realisations');
+          if (section) section.classList.add('is-visible');
+          if (filterKey) {
+            var targetBtn = document.querySelector('.filter-btn[data-filter="' + filterKey + '"]');
             if (targetBtn) targetBtn.click();
+          }
+          requestAnimationFrame(function () {
             var grid = document.getElementById('gallery-grid');
             if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
           });
+        }
+
+        // si on arrive directement avec un lien du type particulier.html#f-portail
+        // (depuis le menu d'un autre onglet), on affiche aussi la galerie
+        if (window.location.hash.indexOf('#f-') === 0) {
+          var section = document.getElementById('realisations');
+          if (section) section.classList.add('is-visible');
+        }
+
+        document.querySelectorAll('.hero-quicklink').forEach(function (link) {
+          link.addEventListener('click', function (e) {
+            e.preventDefault();
+            revealGallery(link.getAttribute('data-filter'));
+          });
         });
-      })();
+
+        var voirBtn = document.getElementById('voir-realisations');
+        if (voirBtn) {
+          voirBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            revealGallery(null);
+          });
+        }
+      });
     </script>
   </section>
 
