@@ -384,6 +384,98 @@ h1, h2, h3, h4 {
 }
 
 /* ---------------------------------------------------------------
+   BULLE "AVIS CLIENT" — apparaît de temps en temps, en bas à gauche,
+   sur toutes les pages (voir js/script.js pour la minuterie).
+--------------------------------------------------------------- */
+.review-bubble {
+  position: fixed;
+  left: 20px;
+  bottom: 24px;
+  z-index: 150;
+  max-width: 340px;
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 18px 40px rgba(20, 24, 12, 0.22);
+  opacity: 0;
+  transform: translateY(16px) scale(0.96);
+  pointer-events: none;
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+.review-bubble.is-visible { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+/* petite pointe façon bulle de BD, en bas à gauche de la carte */
+.review-bubble::after {
+  content: "";
+  position: absolute;
+  left: 28px;
+  bottom: -8px;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  transform: rotate(45deg);
+  border-radius: 0 0 4px 0;
+  z-index: -1;
+}
+.review-bubble-close {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--color-primary-dark);
+  color: #fff;
+  border: 2px solid #fff;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition), transform var(--transition);
+}
+.review-bubble-close:hover { background: var(--color-accent); transform: scale(1.08); }
+.review-bubble-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 18px;
+  text-decoration: none;
+  color: inherit;
+}
+.review-bubble-avatar {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.review-bubble-avatar img { width: 26px; height: 26px; object-fit: contain; }
+.review-bubble-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.review-bubble-stars { color: var(--color-accent); font-size: 0.8rem; letter-spacing: 1px; }
+.review-bubble-text {
+  font-size: 0.86rem;
+  line-height: 1.4;
+  color: var(--color-text);
+}
+.review-bubble-author {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--color-text-light);
+}
+@media (max-width: 640px) {
+  .review-bubble { left: 12px; right: 12px; bottom: 16px; max-width: none; }
+  .review-bubble-inner { padding: 14px 16px; }
+}
+
+/* ---------------------------------------------------------------
    GRIDS & CARDS
 --------------------------------------------------------------- */
 .grid {
