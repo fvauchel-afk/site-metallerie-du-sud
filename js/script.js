@@ -342,7 +342,7 @@ document.addEventListener("DOMContentLoaded", () => {
       clearTimeout(cycleTimer);
       cycleTimer = setTimeout(() => {
         showNext();
-        scheduleNext(22000 + Math.random() * 14000);
+        scheduleNext(11000 + Math.random() * 7000);
       }, delay);
     }
 
@@ -357,7 +357,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Première apparition après un petit délai, le temps que la page s'installe.
-    scheduleNext(9000);
+    scheduleNext(5000);
   })();
 
   /* ---------------------------------------------------------
