@@ -476,6 +476,239 @@ h1, h2, h3, h4 {
 }
 
 /* ---------------------------------------------------------------
+   CHAT DEVIS GUIDÉ — bulle "Demander un devis", commune à toutes les
+   pages (position: fixed, en bas à droite). Ouvre un petit panneau avec
+   un enchaînement de questions à boutons (profil / ouvrage / délai) puis
+   un mini-formulaire, qui poste vers le même Formspree que le formulaire
+   de contact de l'accueil. Logique complète dans js/script.js.
+--------------------------------------------------------------- */
+.devis-chat-launcher {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 220;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 14px 20px 14px 16px;
+  border-radius: 999px;
+  border: none;
+  background: var(--color-primary);
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 14px 32px rgba(20, 24, 12, 0.32);
+  transition: background var(--transition), transform var(--transition);
+}
+.devis-chat-launcher:hover { background: var(--color-accent-dark, var(--color-primary-dark)); transform: translateY(-2px); }
+.devis-chat-launcher svg { width: 20px; height: 20px; flex: none; }
+.devis-chat.is-open .devis-chat-launcher { display: none; }
+
+.devis-chat-panel {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 220;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  max-height: min(600px, calc(100vh - 56px));
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 18px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 22px 50px rgba(20, 24, 12, 0.3);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(16px) scale(0.97);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.devis-chat.is-open .devis-chat-panel { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+.devis-chat-panel[hidden] { display: flex; }
+
+.devis-chat-header {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 16px;
+  background: var(--color-primary-dark);
+  color: #fff;
+}
+.devis-chat-header-info { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.devis-chat-avatar {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.devis-chat-avatar img { width: 22px; height: 22px; object-fit: contain; }
+.devis-chat-header-info strong { display: block; font-size: 0.9rem; line-height: 1.2; }
+.devis-chat-header-info span { display: block; font-size: 0.74rem; color: rgba(255, 255, 255, 0.72); }
+.devis-chat-close {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition);
+}
+.devis-chat-close:hover { background: rgba(255, 255, 255, 0.28); }
+
+.devis-chat-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--color-bg-alt);
+}
+
+.devis-chat-msg {
+  max-width: 86%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  animation: devisChatIn 0.25s ease both;
+}
+.devis-chat-msg--bot {
+  align-self: flex-start;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-bottom-left-radius: 4px;
+  color: var(--color-text);
+}
+.devis-chat-msg--user {
+  align-self: flex-end;
+  background: var(--color-primary);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.devis-chat-msg--error {
+  align-self: flex-start;
+  background: #fdecec;
+  border: 1px solid #f2b8b5;
+  color: #7a2420;
+}
+@keyframes devisChatIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.devis-chat-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  animation: devisChatIn 0.25s ease both;
+}
+.devis-chat-option {
+  font-family: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  padding: 9px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--color-primary);
+  background: #fff;
+  color: var(--color-primary-dark);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition), transform var(--transition);
+}
+.devis-chat-option:hover { background: var(--color-primary); color: #fff; transform: translateY(-1px); }
+.devis-chat-option:disabled { opacity: 0.5; cursor: default; transform: none; }
+
+.devis-chat-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  padding: 12px;
+  animation: devisChatIn 0.25s ease both;
+}
+.devis-chat-form input,
+.devis-chat-form textarea {
+  width: 100%;
+  padding: 9px 11px;
+  border-radius: 9px;
+  border: 1px solid var(--color-border);
+  font-family: inherit;
+  font-size: 0.86rem;
+  color: var(--color-text);
+  background: var(--color-bg-alt);
+}
+.devis-chat-form textarea { resize: vertical; min-height: 60px; }
+.devis-chat-form input:focus,
+.devis-chat-form textarea:focus { outline: 2px solid var(--color-accent); outline-offset: 1px; }
+.devis-chat-form button {
+  margin-top: 2px;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: none;
+  background: var(--color-accent);
+  color: var(--color-primary-dark);
+  cursor: pointer;
+  transition: background var(--transition), opacity var(--transition);
+}
+.devis-chat-form button:hover { background: var(--color-accent-dark, var(--color-primary)); color: #fff; }
+.devis-chat-form button:disabled { opacity: 0.6; cursor: default; }
+
+.devis-chat-typing {
+  align-self: flex-start;
+  display: flex;
+  gap: 4px;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  border-bottom-left-radius: 4px;
+}
+.devis-chat-typing span {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--color-text-light);
+  animation: devisChatBlink 1.2s infinite ease-in-out;
+}
+.devis-chat-typing span:nth-child(2) { animation-delay: 0.15s; }
+.devis-chat-typing span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes devisChatBlink {
+  0%, 80%, 100% { opacity: 0.25; }
+  40% { opacity: 1; }
+}
+
+@media (max-width: 640px) {
+  .devis-chat-launcher { right: 14px; bottom: 14px; padding: 12px 16px 12px 13px; font-size: 0.82rem; }
+  .devis-chat-launcher svg { width: 18px; height: 18px; }
+  .devis-chat-panel {
+    right: 10px; left: 10px; bottom: 10px;
+    width: auto; max-width: none;
+    max-height: min(72vh, 560px);
+  }
+  .back-to-top { bottom: 78px; }
+}
+
+/* ---------------------------------------------------------------
    GRIDS & CARDS
 --------------------------------------------------------------- */
 .grid {
@@ -863,7 +1096,7 @@ h1, h2, h3, h4 {
 --------------------------------------------------------------- */
 .back-to-top {
   position: fixed;
-  bottom: 28px; right: 28px;
+  bottom: 92px; right: 28px;
   width: 46px; height: 46px;
   border-radius: 50%;
   background: var(--color-primary);
