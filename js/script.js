@@ -273,13 +273,101 @@ document.addEventListener("DOMContentLoaded", () => {
   })();
 
   /* ---------------------------------------------------------
-     6) ANNÉE AUTOMATIQUE DANS LE FOOTER
+     6) BULLE "AVIS CLIENT" — apparaît de temps en temps, en bas
+     à gauche, sur toutes les pages, avec le blason de la boîte
+     comme avatar. Reprend les vrais avis Google déjà publiés
+     sur la page Accueil, en version courte.
+  --------------------------------------------------------- */
+  (function () {
+    const bubble = document.getElementById("review-bubble");
+    if (!bubble) return;
+    const closeBtn = bubble.querySelector(".review-bubble-close");
+    const textEl = bubble.querySelector(".review-bubble-text");
+    const authorEl = bubble.querySelector(".review-bubble-author");
+
+    const REVIEWS = [
+      {
+        text: "Portail coulissant sur mesure, découpe laser motif branche d'olivier… Jonathan est à l'écoute, professionnel et très patient.",
+        author: "Charlène Letocart — avis Google",
+      },
+      {
+        text: "Plusieurs chantiers ensemble (portail, portillon, pergolas) : équipe professionnelle, travail méticuleux, budget maîtrisé.",
+        author: "Jean-Marie Carli — avis Google",
+      },
+      {
+        text: "Équipe à l'écoute du début à la fin, grand professionnalisme, suivi et SAV irréprochables. Notre portail est superbe.",
+        author: "Jonathan Begnis Gámez — avis Google",
+      },
+      {
+        text: "Verrière sur mesure et travaux de ferronnerie : une équipe à l'écoute, réactive et très professionnelle.",
+        author: "Christian G. — avis Google",
+      },
+      {
+        text: "Extension de bâtiment industriel puis réparation de bardage : la qualité était au rendez-vous à chaque fois.",
+        author: "Lucas Labat — avis Google",
+      },
+    ];
+
+    const DISMISS_KEY = "lmds-avis-bulle-fermee";
+    let dismissed = false;
+    try {
+      dismissed = sessionStorage.getItem(DISMISS_KEY) === "1";
+    } catch (e) {}
+    if (dismissed) return;
+
+    let index = Math.floor(Math.random() * REVIEWS.length);
+    let hideTimer = null;
+    let cycleTimer = null;
+
+    function showNext() {
+      const r = REVIEWS[index];
+      index = (index + 1) % REVIEWS.length;
+      textEl.textContent = r.text;
+      authorEl.textContent = r.author;
+      bubble.hidden = false;
+      requestAnimationFrame(() => bubble.classList.add("is-visible"));
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(hide, 8000);
+    }
+
+    function hide() {
+      bubble.classList.remove("is-visible");
+      clearTimeout(hideTimer);
+      setTimeout(() => {
+        bubble.hidden = true;
+      }, 500);
+    }
+
+    function scheduleNext(delay) {
+      clearTimeout(cycleTimer);
+      cycleTimer = setTimeout(() => {
+        showNext();
+        scheduleNext(22000 + Math.random() * 14000);
+      }, delay);
+    }
+
+    closeBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      hide();
+      clearTimeout(cycleTimer);
+      try {
+        sessionStorage.setItem(DISMISS_KEY, "1");
+      } catch (e) {}
+    });
+
+    // Première apparition après un petit délai, le temps que la page s'installe.
+    scheduleNext(9000);
+  })();
+
+  /* ---------------------------------------------------------
+     7) ANNÉE AUTOMATIQUE DANS LE FOOTER
   --------------------------------------------------------- */
   const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   /* ---------------------------------------------------------
-     7) FORMULAIRE DE CONTACT
+     8) FORMULAIRE DE CONTACT
      ----------------------------------------------------------
      Ce site est statique (HTML/CSS/JS) : ce script ne fait
      qu'empêcher le rechargement de la page et afficher un message.
