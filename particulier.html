@@ -100,6 +100,11 @@
 
     #realisations { display: none; }
     #realisations.is-visible { display: block; }
+
+    /* Les filtres de catégorie vivent désormais uniquement dans le bandeau
+       en bas de la photo du hero : on masque la barre de filtres redondante
+       de la galerie tout en la laissant dans le DOM (le JS s'appuie dessus). */
+    .gallery-filters { display: none !important; }
   </style>
 </head>
 <body>
@@ -154,6 +159,14 @@
       <a href="#f-escalier" class="hero-quicklink" data-filter="escalier">Escalier</a>
       <a href="#f-verriere" class="hero-quicklink" data-filter="verriere">Verrière</a>
       <a href="#f-brise-vue" class="hero-quicklink" data-filter="brise-vue">Brise vue</a>
+      <a href="#f-garde-corps" class="hero-quicklink" data-filter="garde-corps">Garde-corps</a>
+      <a href="#f-cloture" class="hero-quicklink" data-filter="cloture">Clôture</a>
+      <a href="#f-mezzanine" class="hero-quicklink" data-filter="mezzanine">Mezzanine</a>
+      <a href="#f-porte" class="hero-quicklink" data-filter="porte">Porte technique</a>
+      <a href="#f-motorise" class="hero-quicklink" data-filter="motorise">Équipement motorisé</a>
+      <a href="#f-clim" class="hero-quicklink" data-filter="clim">Abris clim</a>
+      <a href="#f-atelier" class="hero-quicklink" data-filter="atelier">Notre atelier</a>
+      <a href="#f-menuiserie" class="hero-quicklink" data-filter="menuiserie">Menuiserie</a>
     </nav>
 
     <button type="button" id="sound-toggle" class="sound-toggle" aria-pressed="false" aria-label="Activer l'ambiance sonore (chants d'oiseaux)">
