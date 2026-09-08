@@ -441,4 +441,228 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  /* ---------------------------------------------------------
+     9) CHAT DEVIS GUIDÉ
+     ----------------------------------------------------------
+     Bulle "Demander un devis" commune à toutes les pages : un
+     enchaînement de questions à boutons (profil / type d'ouvrage /
+     délai) puis un mini-formulaire, qui poste vers le même Formspree
+     que le formulaire de contact de l'accueil. Aucune discussion
+     libre : chaque branche ramène vers l'envoi de la demande.
+  --------------------------------------------------------- */
+  (function () {
+    const root = document.getElementById("devis-chat");
+    const launcher = document.getElementById("devis-chat-launcher");
+    const panel = document.getElementById("devis-chat-panel");
+    const closeBtn = document.getElementById("devis-chat-close");
+    const body = document.getElementById("devis-chat-body");
+    if (!root || !launcher || !panel || !body) return;
+
+    const FORM_ACTION = "https://formspree.io/f/meaqkdpr";
+
+    const OUVRAGES = {
+      particulier: [
+        "Portail", "Garde-corps", "Escalier métallique", "Pergola",
+        "Clôture", "Verrière", "Mobilier / brise-vue", "Autre projet",
+      ],
+      pro: [
+        "Portail CE et accès", "Garde-corps normés", "Escalier technique",
+        "Porte technique", "Autre besoin",
+      ],
+      collectivite: [
+        "Sécurisation ERP (garde-corps, clôture)", "Portail et contrôle d'accès",
+        "Escalier ou structure", "Aménagement urbain", "Autre projet",
+      ],
+    };
+
+    const DELAIS = ["Dès que possible", "Dans les 3 mois", "Pas encore de date précise"];
+
+    const state = { profil: null, profilLabel: "", ouvrage: null, delai: null, started: false };
+
+    function scrollToBottom() {
+      body.scrollTop = body.scrollHeight;
+    }
+
+    function addBotMessage(text) {
+      const el = document.createElement("div");
+      el.className = "devis-chat-msg devis-chat-msg--bot";
+      el.textContent = text;
+      body.appendChild(el);
+      scrollToBottom();
+      return el;
+    }
+
+    function addUserMessage(text) {
+      const el = document.createElement("div");
+      el.className = "devis-chat-msg devis-chat-msg--user";
+      el.textContent = text;
+      body.appendChild(el);
+      scrollToBottom();
+    }
+
+    function addTyping() {
+      const el = document.createElement("div");
+      el.className = "devis-chat-typing";
+      el.innerHTML = "<span></span><span></span><span></span>";
+      body.appendChild(el);
+      scrollToBottom();
+      return el;
+    }
+
+    function botSay(text, delay) {
+      return new Promise((resolve) => {
+        const typing = addTyping();
+        setTimeout(() => {
+          typing.remove();
+          addBotMessage(text);
+          resolve();
+        }, delay || 500);
+      });
+    }
+
+    function addOptions(options, onPick) {
+      const wrap = document.createElement("div");
+      wrap.className = "devis-chat-options";
+      options.forEach((opt) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "devis-chat-option";
+        btn.textContent = opt;
+        btn.addEventListener("click", () => {
+          Array.from(wrap.children).forEach((b) => (b.disabled = true));
+          onPick(opt);
+        });
+        wrap.appendChild(btn);
+      });
+      body.appendChild(wrap);
+      scrollToBottom();
+      return wrap;
+    }
+
+    async function startFlow() {
+      if (state.started) return;
+      state.started = true;
+      await botSay(
+        "Bonjour, je peux vous aider à préparer votre demande de devis. Vous êtes plutôt :",
+        300
+      );
+      addOptions(
+        ["Particulier", "Professionnel / Entreprise", "Collectivité / Établissement public"],
+        onProfilPicked
+      );
+    }
+
+    async function onProfilPicked(label) {
+      addUserMessage(label);
+      if (label.indexOf("Professionnel") === 0) {
+        state.profil = "pro";
+      } else if (label.indexOf("Collectivité") === 0) {
+        state.profil = "collectivite";
+      } else {
+        state.profil = "particulier";
+      }
+      state.profilLabel = label;
+
+      await botSay("Quel type d'ouvrage vous intéresse ?", 450);
+      addOptions(OUVRAGES[state.profil], onOuvragePicked);
+    }
+
+    async function onOuvragePicked(label) {
+      addUserMessage(label);
+      state.ouvrage = label;
+
+      await botSay("Pour quand souhaitez-vous réaliser ce projet ?", 450);
+      addOptions(DELAIS, onDelaiPicked);
+    }
+
+    async function onDelaiPicked(label) {
+      addUserMessage(label);
+      state.delai = label;
+
+      await botSay(
+        "Parfait, plus qu'une étape : laissez-moi vos coordonnées et nous revenons vers vous avec un devis.",
+        450
+      );
+      renderForm();
+    }
+
+    function renderForm() {
+      const form = document.createElement("form");
+      form.className = "devis-chat-form";
+      form.noValidate = false;
+      form.innerHTML =
+        '<input type="text" name="name" autocomplete="name" placeholder="Nom complet" required />' +
+        '<input type="tel" name="phone" autocomplete="tel" placeholder="Téléphone" required />' +
+        '<input type="email" name="email" autocomplete="email" placeholder="Email" required />' +
+        '<textarea class="devis-chat-details" rows="3" placeholder="Précisions (dimensions, adresse du chantier...) — facultatif"></textarea>' +
+        '<button type="submit">Envoyer ma demande de devis</button>';
+      body.appendChild(form);
+      scrollToBottom();
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        const submitBtn = form.querySelector("button[type='submit']");
+        const originalText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Envoi en cours...";
+
+        const detailsEl = form.querySelector(".devis-chat-details");
+        const firstName = (form.elements["name"].value || "").trim().split(" ")[0];
+        const summary =
+          "Profil : " + state.profilLabel + "\n" +
+          "Ouvrage : " + state.ouvrage + "\n" +
+          "Délai souhaité : " + state.delai +
+          (detailsEl.value.trim() ? "\n\nPrécisions du client :\n" + detailsEl.value.trim() : "");
+
+        const fd = new FormData(form);
+        fd.append("message", summary);
+        fd.append("_subject", "Nouvelle demande de devis (chat guidé du site)");
+
+        try {
+          const response = await fetch(FORM_ACTION, {
+            method: "POST",
+            body: fd,
+            headers: { Accept: "application/json" },
+          });
+          if (!response.ok) throw new Error("Envoi refusé par le serveur");
+
+          form.remove();
+          addBotMessage(
+            "Merci" + (firstName ? " " + firstName : "") +
+            " ! Votre demande a bien été envoyée, nous vous répondons sous 24 à 48h."
+          );
+        } catch (err) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalText;
+          const errEl = document.createElement("div");
+          errEl.className = "devis-chat-msg devis-chat-msg--error";
+          errEl.textContent =
+            "Une erreur est survenue lors de l'envoi. Vous pouvez nous appeler au 07 81 80 63 44 ou écrire à f.vauchel@hotmail.com.";
+          body.appendChild(errEl);
+          scrollToBottom();
+        }
+      });
+    }
+
+    function openPanel() {
+      root.classList.add("is-open");
+      panel.hidden = false;
+      launcher.setAttribute("aria-expanded", "true");
+      startFlow();
+    }
+
+    function closePanel() {
+      root.classList.remove("is-open");
+      launcher.setAttribute("aria-expanded", "false");
+    }
+
+    launcher.addEventListener("click", openPanel);
+    closeBtn.addEventListener("click", closePanel);
+  })();
+
 });
