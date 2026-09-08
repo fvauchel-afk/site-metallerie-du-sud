@@ -140,60 +140,146 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------------------------------------
-     4ter) AMBIANCE SONORE (chants d'oiseaux, ex: hero Particulier)
+     5) AMBIANCE SONORE — commune à toutes les pages, sans coupure
      ----------------------------------------------------------
-     Désactivée par défaut (les navigateurs bloquent de toute façon
-     le son automatique) : la personne clique pour l'activer, avec
-     un léger fondu à l'entrée et à la sortie.
+     Le bouton #sound-toggle et le lecteur #ambiance-audio sont posés
+     sur chaque page (voir sound_widget_html() dans build_pages.py) et
+     restent visibles partout grâce à position:fixed. L'état (on/off)
+     et la position de lecture sont mémorisés dans localStorage à
+     chaque page : en changeant de page, le son ne repart jamais de
+     zéro, il reprend là où il en était (ou reste coupé si on l'avait
+     coupé).
   --------------------------------------------------------- */
-  const soundToggle = document.getElementById("sound-toggle");
-  const ambiance = document.getElementById("ambiance-audio");
+  (function () {
+    const btn = document.getElementById("sound-toggle");
+    const audio = document.getElementById("ambiance-audio");
+    if (!btn || !audio) return;
 
-  if (soundToggle && ambiance) {
-    let fadeTimer = null;
+    const STORE_KEY = "lmds-ambiance-sonore";
     const TARGET_VOLUME = 0.55;
+    let fadeTimer = null;
+    let userToggledOff = false;
+
+    function readState() {
+      try {
+        const raw = localStorage.getItem(STORE_KEY);
+        return raw ? JSON.parse(raw) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function saveState(on) {
+      try {
+        localStorage.setItem(
+          STORE_KEY,
+          JSON.stringify({ on, t: audio.currentTime || 0, ts: Date.now() })
+        );
+      } catch (e) {}
+    }
 
     function fadeTo(target, duration) {
       clearInterval(fadeTimer);
       const steps = 20;
       const stepTime = duration / steps;
-      const startVol = ambiance.volume;
+      const startVol = audio.volume;
       const diff = target - startVol;
       let i = 0;
       fadeTimer = setInterval(() => {
         i++;
-        ambiance.volume = Math.min(1, Math.max(0, startVol + (diff * i) / steps));
+        audio.volume = Math.min(1, Math.max(0, startVol + (diff * i) / steps));
         if (i >= steps) {
           clearInterval(fadeTimer);
-          if (target === 0) ambiance.pause();
+          if (target === 0) audio.pause();
         }
       }, stepTime);
     }
 
-    soundToggle.addEventListener("click", () => {
-      const isPlaying = soundToggle.classList.contains("is-playing");
+    function updateUI(playing) {
+      btn.classList.toggle("is-playing", playing);
+      btn.setAttribute("aria-pressed", playing ? "true" : "false");
+    }
+
+    // Reprend la position là où le son en était sur la page précédente,
+    // pour qu'on n'entende jamais le morceau repartir du début.
+    function resumeSavedPosition(saved) {
+      if (!saved || !isFinite(audio.duration) || audio.duration <= 0) return;
+      const elapsed = Math.max(0, (Date.now() - saved.ts) / 1000);
+      const pos = (saved.t + elapsed) % audio.duration;
+      if (isFinite(pos) && pos >= 0) audio.currentTime = pos;
+    }
+
+    function armFallback() {
+      const events = ["click", "touchstart", "scroll", "keydown"];
+      function onFirstInteraction(e) {
+        events.forEach((ev) => document.removeEventListener(ev, onFirstInteraction));
+        if (btn.contains(e.target)) return; // le bouton gère lui-même son propre clic
+        startAmbiance(readState());
+      }
+      events.forEach((ev) =>
+        document.addEventListener(ev, onFirstInteraction, { passive: true, once: true })
+      );
+    }
+
+    function startAmbiance(saved, instant) {
+      if (userToggledOff) return;
+      audio.volume = instant ? TARGET_VOLUME : 0;
+      const p = audio.play();
+      const afterStart = () => {
+        resumeSavedPosition(saved);
+        if (!instant) fadeTo(TARGET_VOLUME, saved ? 350 : 1200);
+        updateUI(true);
+        saveState(true);
+      };
+      if (p && p.then) {
+        p.then(afterStart).catch(armFallback);
+      } else {
+        afterStart();
+      }
+    }
+
+    const saved = readState();
+    if (saved && saved.on === false) {
+      // L'utilisateur avait coupé le son : on respecte son choix sur toute la navigation.
+      userToggledOff = true;
+      updateUI(false);
+    } else {
+      // Reprise auto : première visite (fondu doux) ou arrivée depuis une autre
+      // page où le son jouait déjà (reprise quasi instantanée, sans coupure).
+      startAmbiance(saved);
+    }
+
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isPlaying = btn.classList.contains("is-playing");
       if (isPlaying) {
         fadeTo(0, 600);
-        soundToggle.classList.remove("is-playing");
-        soundToggle.setAttribute("aria-pressed", "false");
+        updateUI(false);
+        userToggledOff = true;
+        saveState(false);
       } else {
-        ambiance.volume = 0;
-        ambiance.play().catch(() => {});
-        fadeTo(TARGET_VOLUME, 900);
-        soundToggle.classList.add("is-playing");
-        soundToggle.setAttribute("aria-pressed", "true");
+        userToggledOff = false;
+        startAmbiance(readState(), true);
       }
     });
-  }
+
+    // Position toujours à jour, pour que la page suivante reprenne pile là
+    // où on en était.
+    audio.addEventListener("timeupdate", () => {
+      if (!userToggledOff) saveState(true);
+    });
+    window.addEventListener("pagehide", () => saveState(!userToggledOff));
+    window.addEventListener("beforeunload", () => saveState(!userToggledOff));
+  })();
 
   /* ---------------------------------------------------------
-     5) ANNÉE AUTOMATIQUE DANS LE FOOTER
+     6) ANNÉE AUTOMATIQUE DANS LE FOOTER
   --------------------------------------------------------- */
   const yearEl = document.getElementById("year");
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   /* ---------------------------------------------------------
-     6) FORMULAIRE DE CONTACT
+     7) FORMULAIRE DE CONTACT
      ----------------------------------------------------------
      Ce site est statique (HTML/CSS/JS) : ce script ne fait
      qu'empêcher le rechargement de la page et afficher un message.
