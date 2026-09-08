@@ -93,31 +93,37 @@
   @media(min-width:760px){.nav-cta{display:inline-flex;}}
 
   /* ---------- HERO ---------- */
-  .hero{position:relative;padding:78px 24px 60px;text-align:center;
-    background:radial-gradient(ellipse at top right, rgba(176,141,87,0.14), transparent 55%),radial-gradient(ellipse at bottom left, rgba(176,141,87,0.08), transparent 55%);
-    border-bottom:1px solid var(--line);}
-  .hero .container{max-width:860px;}
+  .hero{position:relative;padding:78px 24px 170px;text-align:center;overflow:hidden;
+    background:radial-gradient(ellipse at top right, rgba(176,141,87,0.14), transparent 55%),radial-gradient(ellipse at bottom left, rgba(176,141,87,0.08), transparent 55%);}
+  .hero::after{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:170px;
+    background:linear-gradient(to bottom, transparent, var(--bg) 85%);
+    pointer-events:none;
+  }
+  .hero .container{max-width:860px;position:relative;z-index:1;}
   .hero p.lead{font-size:1.08rem;max-width:660px;margin:0 auto 1.8em;}
   .hero-stats{display:flex;justify-content:center;gap:44px;margin-top:40px;flex-wrap:wrap;}
   .hero-stats div{text-align:center;}
   .hero-stats strong{display:block;font-size:1.9rem;color:var(--bronze);font-weight:800;}
   .hero-stats span{font-size:.78rem;color:var(--text-soft);text-transform:uppercase;letter-spacing:.06em;}
 
-  /* ---------- TABS NAV ---------- */
-  .tabs-shell{padding:44px 0 70px;}
-  .tabs-nav{
-    display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
-    margin-bottom:44px;border-bottom:1px solid var(--line);padding-bottom:0;
+  /* ---------- TABS NAV (pilules, façon filtres particulier.html) ---------- */
+  .hero-tabs-overlay{
+    position:absolute;left:0;right:0;bottom:36px;z-index:2;
+    display:flex;flex-wrap:wrap;gap:14px;justify-content:center;padding:0 24px;
   }
+  .tabs-shell{padding:0 0 70px;}
   .tab-btn{
-    background:transparent;border:none;color:var(--text-soft);
-    font-family:'Poppins',sans-serif;font-weight:600;font-size:.86rem;
-    text-transform:uppercase;letter-spacing:.04em;
-    padding:14px 18px;cursor:pointer;position:relative;
-    border-bottom:3px solid transparent;transition:color .15s ease,border-color .15s ease;
+    background:rgba(20,18,13,0.5);
+    border:1.5px solid rgba(255,255,255,0.55);
+    color:#fff;font-weight:700;font-size:.9rem;
+    font-family:'Poppins',sans-serif;
+    padding:12px 26px;border-radius:999px;cursor:pointer;
+    backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+    transition:background .15s ease, border-color .15s ease, transform .15s ease, color .15s ease;
   }
-  .tab-btn:hover{color:#fff;}
-  .tab-btn.active{color:var(--bronze);border-color:var(--bronze);}
+  .tab-btn:hover{background:rgba(176,141,87,0.4);border-color:var(--bronze);transform:translateY(-1px);}
+  .tab-btn.active{background:var(--bronze);border-color:var(--bronze);color:#17140f;}
 
   section{padding:0;}
   .block{padding:60px 0;}
@@ -262,20 +268,19 @@
         <div><strong>PACA</strong><span>zone d'intervention</span></div>
       </div>
     </div>
+
+    <!-- Onglets façon pilules, superposés en bas du hero (même style que les filtres de particulier.html) -->
+    <div class="hero-tabs-overlay" id="catalogue-tabs" role="tablist">
+      <button class="tab-btn active" data-tab="portail" role="tab" aria-selected="true">Portail &amp; Portillon</button>
+      <button class="tab-btn" data-tab="motorisation" role="tab" aria-selected="false">Motorisation</button>
+      <button class="tab-btn" data-tab="kitce" role="tab" aria-selected="false">Kit CE</button>
+      <button class="tab-btn" data-tab="porteservice" role="tab" aria-selected="false">Porte de Service</button>
+      <button class="tab-btn" data-tab="mezzanine" role="tab" aria-selected="false">Mezzanine</button>
+      <button class="tab-btn" data-tab="portehall" role="tab" aria-selected="false">Porte de Hall</button>
+    </div>
   </section>
 
-  <!-- ================= TABS ================= -->
-  <div class="tabs-shell" id="catalogue-tabs">
-    <div class="container">
-      <div class="tabs-nav" role="tablist">
-        <button class="tab-btn active" data-tab="portail" role="tab" aria-selected="true">Portail &amp; Portillon</button>
-        <button class="tab-btn" data-tab="motorisation" role="tab" aria-selected="false">Motorisation</button>
-        <button class="tab-btn" data-tab="kitce" role="tab" aria-selected="false">Kit CE</button>
-        <button class="tab-btn" data-tab="porteservice" role="tab" aria-selected="false">Porte de Service</button>
-        <button class="tab-btn" data-tab="mezzanine" role="tab" aria-selected="false">Mezzanine</button>
-        <button class="tab-btn" data-tab="portehall" role="tab" aria-selected="false">Porte de Hall</button>
-      </div>
-    </div>
+  <div class="tabs-shell">
 
     <!-- ======== ONGLET : PORTAIL & PORTILLON ======== -->
     <div class="tab-panel" id="tab-portail" role="tabpanel">
