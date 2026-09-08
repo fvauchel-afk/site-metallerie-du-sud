@@ -344,6 +344,46 @@ h1, h2, h3, h4 {
 }
 
 /* ---------------------------------------------------------------
+   AMBIANCE SONORE (bouton + lecteur, présents sur toutes les pages)
+   position: fixed pour rester visible et cliquable partout sur le site,
+   pas seulement sur le hero d'une page donnée — voir js/script.js pour
+   la logique de lecture qui ne coupe jamais en changeant de page.
+--------------------------------------------------------------- */
+.sound-toggle {
+  position: fixed;
+  right: 28px;
+  top: 116px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px 10px 12px;
+  border-radius: 999px;
+  background: rgba(38, 60, 37, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  z-index: 200;
+  line-height: 1;
+  transition: background var(--transition), transform var(--transition);
+}
+.sound-toggle:hover { background: rgba(38, 60, 37, 0.75); transform: translateY(-2px); }
+.sound-toggle .sound-icon { width: 18px; height: 18px; flex: none; display: block; }
+.sound-toggle .sound-icon .wave { opacity: 0; transition: opacity 0.25s ease; }
+.sound-toggle.is-playing .sound-icon .wave { opacity: 1; }
+.sound-toggle .sound-icon .muted-line { transition: opacity 0.25s ease; }
+.sound-toggle.is-playing .sound-icon .muted-line { opacity: 0; }
+.sound-toggle .sound-label-on { display: none; }
+.sound-toggle.is-playing .sound-label-off { display: none; }
+.sound-toggle.is-playing .sound-label-on { display: inline; }
+@media (max-width: 640px) {
+  .sound-toggle { right: 14px; top: 96px; padding: 8px 12px 8px 9px; font-size: 0.72rem; gap: 7px; }
+  .sound-toggle .sound-icon { width: 15px; height: 15px; }
+}
+
+/* ---------------------------------------------------------------
    GRIDS & CARDS
 --------------------------------------------------------------- */
 .grid {
