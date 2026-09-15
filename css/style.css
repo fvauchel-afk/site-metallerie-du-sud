@@ -140,7 +140,10 @@ h1, h2, h3, h4 {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 100;
-  background: transparent;
+  /* Un léger voile sombre en permanence (même avant tout scroll) pour que
+     le logo et le menu restent lisibles quelle que soit la photo du hero
+     derrière eux — sans pour autant devenir une bannière pleine. */
+  background: linear-gradient(180deg, rgba(8, 12, 7, 0.42) 0%, rgba(8, 12, 7, 0.16) 100%);
   transition: background var(--transition), box-shadow var(--transition), padding var(--transition);
   padding: 22px 0;
 }
@@ -163,13 +166,25 @@ h1, h2, h3, h4 {
   align-items: center;
   white-space: nowrap;
 }
+/* Le nouveau logo (texte gris/bleu) est peu lisible sur une photo ou un fond
+   sombre : on le pose sur une petite carte blanche pour qu'il reste net et
+   bien visible partout (en-tête transparent, en-tête au scroll, footer). */
+.logo-card {
+  display: inline-flex;
+  align-items: center;
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.22);
+  transition: padding var(--transition), box-shadow var(--transition);
+}
 .logo-img {
-  height: 48px;
+  height: 42px;
   width: auto;
   display: block;
-  transition: height var(--transition);
 }
-.site-header.scrolled .logo-img { height: 40px; }
+.site-header.scrolled .logo-card { padding: 6px 12px; box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12); }
+.site-header.scrolled .logo-img { height: 34px; }
 
 .main-nav ul { display: flex; align-items: center; gap: 22px; }
 
@@ -1059,6 +1074,21 @@ h1, h2, h3, h4 {
 .footer-nav { grid-area: nav; align-self: center; }
 .footer-social { grid-area: social; align-self: center; justify-self: end; }
 
+.footer-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.footer-brand-logo {
+  height: 56px;
+  width: auto;
+  display: block;
+  flex-shrink: 0;
+}
+
+/* ancien lockup texte, plus utilisé dans le footer depuis l'ajout du
+   nouveau logo, conservé au cas où */
 .footer-brand-name {
   font-family: var(--font-heading);
   font-weight: 800;
@@ -1079,7 +1109,7 @@ h1, h2, h3, h4 {
   letter-spacing: 3px;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.5);
-  margin: 4px 0 14px;
+  margin: 4px 0 0;
 }
 .footer-brand p:last-child { color: rgba(255, 255, 255, 0.75); }
 
