@@ -594,7 +594,7 @@ document.addEventListener("DOMContentLoaded", () => {
         '<input type="text" name="name" autocomplete="name" placeholder="Nom complet" required />' +
         '<input type="tel" name="phone" autocomplete="tel" placeholder="Téléphone" required />' +
         '<input type="email" name="email" autocomplete="email" placeholder="Email" required />' +
-        '<textarea class="devis-chat-details" rows="3" placeholder="Précisions (dimensions, adresse du chantier...) — facultatif"></textarea>' +
+        '<textarea class="devis-chat-details" rows="3" placeholder="Précisions (dimensions, adresse du chantier...)" required></textarea>' +
         '<button type="submit">Envoyer ma demande de devis</button>';
       body.appendChild(form);
       scrollToBottom();
